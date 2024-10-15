@@ -1,14 +1,40 @@
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { Box, Card, Container, Group, Image, Text, Textarea, Title } from '@mantine/core';
 import Logo from '../assets/logo.svg';
 import classes from './Pad.module.css';
 
+const socket = io('http://localhost:3000'); // Adjust the URL as needed
+
 const Pad = () => {
+  const [content, setContent] = useState(''); // New state for content
+
+  useEffect(() => {
+    socket.on('receive_content', (newContent) => {
+      setContent(newContent); // Update content when received
+    });
+
+    return () => {
+      socket.off('receive_content'); // Clean up on unmount
+    };
+  }, []);
+
+  const handleChange = (value: string) => {
+    setContent(value); // Update local state
+    socket.emit('send_content', value); // Emit content to others
+  };
+
   return (
     <Box bg="brand.0">
       <Container size="xl" h="100vh" p="xl">
         <Card radius="xs">
           <Header />
-          <Textarea minRows={4} classNames={{ input: classes.input }} />
+          <Textarea
+            minRows={4}
+            classNames={{ input: classes.input }}
+            value={content} // Bind value to state
+            onChange={(event) => handleChange(event.currentTarget.value)} // Handle change
+          />
           <Footer />
         </Card>
       </Container>
