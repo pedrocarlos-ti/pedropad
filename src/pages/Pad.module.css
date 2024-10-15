@@ -1,0 +1,27 @@
+:root {
+  --height: 600px;
+  --default-height: 3rem;
+}
+
+.input {
+  border: 1px solid var(--mantine-color-brand-0);
+  border-radius: var(--mantine-radius-xs);
+  height: calc(var(--height) - var(--default-height));
+}
+
+.header {
+  border: 1px solid var(--mantine-color-brand-0);
+  border-radius: var(--mantine-radius-xs);
+  border-bottom: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.footer {
+  border: 1px solid var(--mantine-color-brand-0);
+  border-radius: var(--mantine-radius-xs);
+
+  border-top: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
