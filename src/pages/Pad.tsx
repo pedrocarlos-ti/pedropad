@@ -4,7 +4,7 @@ import { Box, Card, Container, Group, Image, Text, Textarea, Title } from '@mant
 import Logo from '../assets/logo.svg';
 import classes from './Pad.module.css';
 
-const socket = io('http://192.168.1.75:3000'); // Adjust the URL as needed
+const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 const Pad = () => {
   const [content, setContent] = useState(''); // New state for content
