@@ -1,7 +1,6 @@
+import { Box, Card, Container, Group, Image, Text, Textarea, Title } from '@mantine/core';
 import { useCallback, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { Box, Card, Container, Group, Image, Text, Textarea, Title } from '@mantine/core';
-import Logo from '../assets/logo.svg';
 import classes from './Pad.module.css';
 
 const socket = io(import.meta.env.VITE_BACKEND_URL);
@@ -57,7 +56,7 @@ const Header = () => {
   return (
     <Box className={classes.header}>
       <Group py="sm" px="xl" align="center" justify="flex-start">
-        <Image src={Logo} alt="Logo" w="2.2rem" />
+        <Image src="https://www.svgrepo.com/show/304506/edit-pen.svg" alt="Logo" w="2.2rem" />
         <Text c="brand.9" fw={500} size="md" ff="monospace">
           pedropad
         </Text>
