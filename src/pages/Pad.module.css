@@ -7,6 +7,10 @@
   border: 1px solid var(--mantine-color-brand-0);
   border-radius: var(--mantine-radius-xs);
   height: calc(var(--height) - var(--default-height));
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    height: calc(var(--height) - var(--default-height) * 2);
+  }
 }
 
 .header {

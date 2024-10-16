@@ -1,23 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { Box, Card, Container, Group, Image, Text, Textarea, Title } from '@mantine/core';
 import Logo from '../assets/logo.svg';
 import classes from './Pad.module.css';
 
-const socket = io('http://localhost:3000'); // Adjust the URL as needed
+const socket = io('http://192.168.1.75:3000'); // Adjust the URL as needed
 
 const Pad = () => {
   const [content, setContent] = useState(''); // New state for content
+  const [isConnected, setIsConnected] = useState(false);
+
+  const handleReceiveContent = useCallback((newContent: string) => {
+    setContent(newContent);
+  }, []);
 
   useEffect(() => {
-    socket.on('receive_content', (newContent) => {
-      setContent(newContent); // Update content when received
-    });
+    socket.on('connect', () => setIsConnected(true));
+    socket.on('disconnect', () => setIsConnected(false));
+
+    socket.on('initial_content', handleReceiveContent);
+    socket.on('receive_content', handleReceiveContent);
 
     return () => {
-      socket.off('receive_content'); // Clean up on unmount
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('initial_content');
+      socket.off('receive_content');
     };
-  }, []);
+  }, [handleReceiveContent]);
 
   const handleChange = (value: string) => {
     setContent(value); // Update local state
@@ -26,7 +36,7 @@ const Pad = () => {
 
   return (
     <Box bg="brand.0">
-      <Container size="xl" h="100vh" p="xl">
+      <Container size="xl" h="100vh" p={{ base: '0', md: 'xl' }}>
         <Card radius="xs">
           <Header />
           <Textarea
@@ -34,8 +44,9 @@ const Pad = () => {
             classNames={{ input: classes.input }}
             value={content} // Bind value to state
             onChange={(event) => handleChange(event.currentTarget.value)} // Handle change
+            disabled={!isConnected}
           />
-          <Footer />
+          <Footer isConnected={isConnected} />
         </Card>
       </Container>
     </Box>
@@ -55,16 +66,17 @@ const Header = () => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ isConnected }: { isConnected: boolean }) => {
   return (
     <Box className={classes.footer}>
-      <Group p="md" align="center" justify="center">
+      <Group gap="xs" p="md" align="center" justify="center">
+        <Text fw={700} size="md" span c="dark">
+          pedropad
+        </Text>
         <Title c="brand.5" order={6}>
-          <Text fw={700} size="md" span c="dark">
-            pedropad
-          </Text>
-          - A free and open-source collaborative text editor - v0.0.1
+          A free and open-source collaborative text editor
         </Title>
+        <Text c={isConnected ? 'green' : 'red'}>{isConnected ? 'Connected' : 'Disconnected'}</Text>
       </Group>
     </Box>
   );
